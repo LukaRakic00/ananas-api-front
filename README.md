@@ -55,10 +55,32 @@ npm run lint
 
 ## 🌐 API Endpoint
 
+**Backend lokacija:** `AnanasAPI/back` folder
+
 Aplikacija koristi samo `/api/excel` endpoint sa base URL-om:
 
+**Lokalno razvojno okruženje:**
 ```
 http://localhost:8080/api/excel
+```
+
+**Produkcija (Render):**
+```
+https://ananas-api-back.onrender.com/api/excel
+```
+
+### Environment Variables
+
+Možete podesiti API URL preko environment variable:
+
+Kreirati `.env.local` fajl u root folderu:
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8080/api/excel
+```
+
+Za produkciju:
+```env
+NEXT_PUBLIC_API_URL=https://ananas-api-back.onrender.com/api/excel
 ```
 
 **⚠️ Važno:** Aplikacija NE koristi `/api/ananas/excel` endpoint.
