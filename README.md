@@ -57,7 +57,17 @@ npm run lint
 
 **Backend lokacija:** `AnanasAPI/back` folder
 
-Aplikacija koristi samo `/api/excel` endpoint sa base URL-om:
+**⚠️ VAŽNO:** Aplikacija MORA da koristi `/api/excel` endpoint za sve API pozive.
+
+**Ispravno:**
+```
+https://ananas-api-back.onrender.com/api/excel?page=0&size=20
+```
+
+**Pogrešno:**
+```
+https://ananas-api-back.onrender.com/?page=0&size=20
+```
 
 **Lokalno razvojno okruženje:**
 ```
@@ -68,7 +78,11 @@ http://localhost:8080/api/excel
 ```
 https://ananas-api-back.onrender.com/api/excel
 ```
-**Napomena:** Backend na Render-u koristi port 10000 interno, ali je dostupan preko HTTPS standardnog porta (443).
+
+**Napomena:** 
+- Backend na Render-u koristi port 10000 interno, ali je dostupan preko HTTPS standardnog porta (443)
+- Root endpoint (`/`) vraća informacije o API-ju, ali **podaci se dobijaju preko `/api/excel`**
+- Frontend automatski dodaje `/api/excel` putanju ako nije prisutna u URL-u
 
 ### Environment Variables
 

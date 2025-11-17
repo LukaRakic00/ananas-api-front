@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import ExcelUpload from './components/ExcelUpload';
 import ExcelTable from './components/ExcelTable';
 import SearchBar from './components/SearchBar';
@@ -44,10 +45,14 @@ export default function Home() {
       
       setData(result);
     } catch (err: any) {
-      if (err.code === 'ERR_NETWORK' || err.message?.includes('ERR_CONNECTION_REFUSED')) {
-        setError('Backend server nije dostupan. Proverite da li je server pokrenut na http://localhost:8080');
+      if (err.code === 'ERR_NETWORK' || err.message?.includes('ERR_CONNECTION_REFUSED') || err.response?.status === 404) {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 
+          (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1'
+            ? 'https://ananas-api-back.onrender.com/api/excel'
+            : 'http://localhost:8080/api/excel');
+        setError(`Backend server nije dostupan na ${apiUrl}. Proverite da li je server pokrenut.`);
       } else {
-        setError(err.response?.data?.message || 'Greška pri učitavanju podataka');
+        setError(err.response?.data?.message || err.message || 'Greška pri učitavanju podataka');
       }
       console.error('Load error:', err);
     } finally {
@@ -152,9 +157,20 @@ export default function Home() {
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Excel Manager</h1>
-              <p className="text-sm text-gray-600">Upravljanje Excel podacima</p>
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200 shadow-lg">
+                <Image
+                  src="/ananasLOGO.png"
+                  alt="Ananas Logo"
+                  width={120}
+                  height={120}
+                  className="object-contain"
+                />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">Upravljanje Excel podacima</h1>
+                <p className="text-sm text-gray-600">Podaci kao koji se šalju ananasu</p>
+              </div>
             </div>
             <div className="flex gap-2">
               {data && (
