@@ -1,9 +1,13 @@
 import axios from 'axios';
 import type { ExcelRow, UploadResponse, PageResponse, SearchRequest, ExcelRowFormData } from '../types';
 
-// Backend je u AnanasAPI/back folderu i radi na portu 8080 (lokalno)
-// Za produkciju koristiti: https://ananas-api-back.onrender.com/api/excel
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/excel';
+// Backend je u AnanasAPI/back folderu
+// Lokalno: http://localhost:8080/api/excel (port 8080)
+// Produkcija (Render): https://ananas-api-back.onrender.com/api/excel (port 10000 interno, ali Render rutira na HTTPS)
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 
+  (typeof window !== 'undefined' && window.location.hostname !== 'localhost' 
+    ? 'https://ananas-api-back.onrender.com/api/excel' 
+    : 'http://localhost:8080/api/excel');
 
 const api = axios.create({
   baseURL: API_BASE_URL,

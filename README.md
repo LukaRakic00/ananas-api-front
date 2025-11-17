@@ -68,6 +68,7 @@ http://localhost:8080/api/excel
 ```
 https://ananas-api-back.onrender.com/api/excel
 ```
+**Napomena:** Backend na Render-u koristi port 10000 interno, ali je dostupan preko HTTPS standardnog porta (443).
 
 ### Environment Variables
 
