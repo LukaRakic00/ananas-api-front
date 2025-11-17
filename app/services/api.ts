@@ -92,6 +92,32 @@ api.interceptors.request.use(
   }
 );
 
+// Response interceptor za bolje logovanje grešaka
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response) {
+      // Server je odgovorio sa status kodom koji nije u opsegu 2xx
+      console.error('API Error Response:', {
+        status: error.response.status,
+        statusText: error.response.statusText,
+        data: error.response.data,
+        url: error.config?.url,
+        method: error.config?.method,
+      });
+    } else if (error.request) {
+      // Zahtev je poslat ali nema odgovora
+      console.error('API Error: No response received', error.request);
+    } else {
+      // Greška pri postavljanju zahteva
+      console.error('API Error:', error.message);
+    }
+    return Promise.reject(error);
+  }
+);
+
 // Upload Excel fajla
 export const uploadExcelFile = async (file: File): Promise<UploadResponse> => {
   const formData = new FormData();
@@ -178,9 +204,33 @@ export const exportToXmlByUploadId = async (uploadId: string): Promise<string> =
   return response.data;
 };
 
+// Export kao Excel
+export const exportToExcel = async (page: number = 0, size: number = 1000): Promise<Blob> => {
+  const response = await api.get('/export/excel', {
+    params: { page, size },
+    responseType: 'blob',
+    headers: {
+      'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    },
+  });
+  return response.data;
+};
+
 // Download XML fajl
 export const downloadXmlFile = (xmlContent: string, filename: string = 'excel_rows.xml'): void => {
   const blob = new Blob([xmlContent], { type: 'application/xml' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  window.URL.revokeObjectURL(url);
+};
+
+// Download Excel fajl
+export const downloadExcelFile = (blob: Blob, filename: string = 'excel_rows.xlsx'): void => {
   const url = window.URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
